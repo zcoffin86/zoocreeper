@@ -69,6 +69,9 @@ public class Backup {
         ZooKeeper zk = null;
         try {
             zk = options.createZooKeeper(LOGGER);
+            if (options.zkUser != null && options.zkPassword != null) {
+                zk.addAuthInfo("digest", (options.zkUser + ":" + options.zkPassword).getBytes());
+            }
             jgen = JSON_FACTORY.createGenerator(os);
             if (options.prettyPrint) {
                 jgen.setPrettyPrinter(new DefaultPrettyPrinter());

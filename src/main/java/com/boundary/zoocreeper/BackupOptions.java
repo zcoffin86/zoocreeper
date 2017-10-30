@@ -36,4 +36,12 @@ class BackupOptions extends CommonOptions {
     @Option(name = "--pretty-print", usage = "Pretty printing of JSON output", required = false)
     boolean prettyPrint = false;
 
+    @Option(name = "-u", aliases = { "--user" }, usage = "ZooKeeper user",
+            required = false, metaVar = "<user>")
+    String zkUser;
+
+    @Option(name = "-p", aliases = { "--password" }, usage = "ZooKeeper password",
+            required = false, metaVar = "<password>")
+    String zkPassword;
+
 }
