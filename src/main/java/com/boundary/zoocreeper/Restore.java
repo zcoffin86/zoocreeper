@@ -70,6 +70,9 @@ public class Restore {
         try {
             jp = JSON_FACTORY.createParser(inputStream);
             zk = options.createZooKeeper(LOGGER);
+            if (options.zkUser != null && options.zkPassword != null) {
+                zk.addAuthInfo("digest", (options.zkUser + ":" + options.zkPassword).getBytes());
+            }
             doRestore(jp, zk);
         } finally {
             if (zk != null) {

@@ -64,6 +64,14 @@ public class CommonOptions {
             required = false, metaVar = "<root_path>", handler = ZooKeeperPathOptionHandler.class)
     String rootPath = "/";
 
+    @Option(name = "-u", aliases = { "--user" }, usage = "ZooKeeper user",
+            required = false, metaVar = "<user>")
+    String zkUser;
+
+    @Option(name = "-p", aliases = { "--password" }, usage = "ZooKeeper password",
+            required = false, metaVar = "<password>")
+    String zkPassword;
+
     @Option(name = "-h", aliases = { "--help" }, usage = "Show usage information")
     boolean help;
 
