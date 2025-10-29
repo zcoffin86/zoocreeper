@@ -34,6 +34,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
@@ -70,7 +71,7 @@ public class Backup {
         try {
             zk = options.createZooKeeper(LOGGER);
             if (options.zkUser != null && options.zkPassword != null) {
-                zk.addAuthInfo("digest", (options.zkUser + ":" + options.zkPassword).getBytes());
+                zk.addAuthInfo("digest", (options.zkUser + ":" + options.zkPassword).getBytes(StandardCharsets.UTF_8));
             }
             jgen = JSON_FACTORY.createGenerator(os);
             if (options.prettyPrint) {

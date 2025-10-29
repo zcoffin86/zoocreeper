@@ -37,6 +37,7 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -71,7 +72,7 @@ public class Restore {
             jp = JSON_FACTORY.createParser(inputStream);
             zk = options.createZooKeeper(LOGGER);
             if (options.zkUser != null && options.zkPassword != null) {
-                zk.addAuthInfo("digest", (options.zkUser + ":" + options.zkPassword).getBytes());
+                zk.addAuthInfo("digest", (options.zkUser + ":" + options.zkPassword).getBytes(StandardCharsets.UTF_8));
             }
             doRestore(jp, zk);
         } finally {
@@ -120,12 +121,15 @@ public class Restore {
     private void restoreNode(ZooKeeper zk, BackupZNode zNode) throws KeeperException, InterruptedException {
         createPath(zk, getParentPath(zNode.path));
         try {
-            zk.create(zNode.path, zNode.data, zNode.acls, CreateMode.PERSISTENT);
+            final List<ACL> acls = options.noAcls ? Ids.OPEN_ACL_UNSAFE : zNode.acls;
+            zk.create(zNode.path, zNode.data, acls, CreateMode.PERSISTENT);
             LOGGER.info("Created node: {}", zNode.path);
         } catch (NodeExistsException e) {
             if (options.overwriteExisting) {
                 // TODO: Compare with current data / acls
-                zk.setACL(zNode.path, zNode.acls, -1);
+                if (!options.noAcls) {
+                    zk.setACL(zNode.path, zNode.acls, -1);
+                }
                 zk.setData(zNode.path, zNode.data, -1);
             } else {
                 LOGGER.warn("Node already exists: {}", zNode.path);

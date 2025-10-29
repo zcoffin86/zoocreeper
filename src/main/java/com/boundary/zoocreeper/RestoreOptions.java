@@ -29,4 +29,6 @@ public class RestoreOptions extends CommonOptions {
     @Option(name = "--overwrite-existing", usage = "Overwrite existing znodes", required = false)
     boolean overwriteExisting = false;
 
+    @Option(name = "--no-acls", usage = "Do not restore ACLs", required = false)
+    boolean noAcls = false;
 }
